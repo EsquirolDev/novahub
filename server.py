@@ -274,7 +274,7 @@ def container_command(sid, svc):
         return f"{base} down >/dev/null 2>&1; exec {base} up"
     parts = ["exec podman run --rm --replace -i", f"--name {q(container_name(sid))}", f"--label novahub.service={q(sid)}"]
     if svc.get("port") and not re.search(r"--network[= ]host\b", svc.get("cargs") or ""):
-        parts.append(f"-p {svc['port']}:{svc.get('cport') or svc['port']}")
+        parts.append(f"-p 127.0.0.1:{svc['port']}:{svc.get('cport') or svc['port']}")
     root = os.path.realpath(os.path.expanduser(svc.get("cwd") or "~"))
     for host, path, ro in parse_volumes(svc.get("volumes")):
         host = os.path.join(root, os.path.expanduser(host)) if not os.path.isabs(os.path.expanduser(host)) else os.path.expanduser(host)
